@@ -1,0 +1,23 @@
+vim sliding1150.c
+
+#include <stdio.h>
+int main()
+{
+    int n, w, i, j;
+    printf("Enter number of frames: ");
+    scanf("%d", &n);
+    printf("Enter window size: ");
+    scanf("%d", &w);
+
+    for (i = 1; i <= n; i += w) {
+        printf("\nWindow:\n");
+        for (j = i; j < i+w && j <= n; j++)
+            printf("Frame %d sent\n", j);
+        for (j = i; j < i+w && j <= n; j++)
+            printf("ACK %d received\n", j);
+    }
+    return 0;
+}
+
+gcc sliding1150.c
+./a.out
