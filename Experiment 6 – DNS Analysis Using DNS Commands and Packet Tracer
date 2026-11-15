@@ -1,0 +1,4 @@
+nslookup example.com
+dig example.com
+host example.com
+ping -c 4 example.com
