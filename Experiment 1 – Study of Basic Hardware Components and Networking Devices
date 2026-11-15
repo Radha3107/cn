@@ -1,0 +1,5 @@
+ip addr
+ip link
+ip route
+hostname
+ping -c 4 127.0.0.1
