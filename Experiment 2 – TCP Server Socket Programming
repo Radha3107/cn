@@ -1,0 +1,41 @@
+vim server1150.c
+Press i, enter code, then Esc → :wq.
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#define PORT 10251
+
+int main()
+{
+    int s, c, n;
+    struct sockaddr_in a;
+    char b[1024];
+
+    s = socket(AF_INET, SOCK_STREAM, 0);
+    a.sin_family = AF_INET;
+    a.sin_addr.s_addr = INADDR_ANY;
+    a.sin_port = htons(PORT);
+
+    bind(s, (struct sockaddr *)&a, sizeof(a));
+    listen(s, 3);
+    printf("TCP server listening on %d\n", PORT);
+
+    c = accept(s, NULL, NULL);
+    while ((n = read(c, b, sizeof(b)-1)) > 0) {
+        b[n] = '\0';
+        printf("Received: %s\n", b);
+        send(c, b, n, 0);
+    }
+    close(c);
+    close(s);
+    return 0;
+}
+
+
+
+gcc server1150.c
+./a.out
+
+Input/output: In another terminal run nc 127.0.0.1 10251, type Hello Server. 
+Server prints Received: Hello Server; Netcat receives the same text back.
