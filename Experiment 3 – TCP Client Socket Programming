@@ -1,0 +1,35 @@
+vim client1150.c
+
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#define PORT 10251
+
+int main()
+{
+    int s, n;
+    struct sockaddr_in a;
+    char msg[] = "Hello Server", b[1024];
+
+    s = socket(AF_INET, SOCK_STREAM, 0);
+    a.sin_family = AF_INET;
+    a.sin_port = htons(PORT);
+    inet_pton(AF_INET, "127.0.0.1", &a.sin_addr);
+    connect(s, (struct sockaddr *)&a, sizeof(a));
+
+    send(s, msg, strlen(msg), 0);
+    n = read(s, b, sizeof(b)-1);
+    if (n > 0) {
+        b[n] = '\0';
+        printf("Server reply: %s\n", b);
+    }
+    close(s);
+
+gcc client1150.c
+./a.out
+
+Input/output: Client sends Hello Server; expected client output: Server reply: Hello Server. 
+Server prints Received: Hello Server.
+    return 0;
+}
