@@ -1,0 +1,31 @@
+vim leaky1150.c
+
+#include <stdio.h>
+int main()
+{
+    int size, rate, n, p, bucket = 0;
+    printf("Bucket capacity: ");
+    scanf("%d", &size);
+    printf("Output rate: ");
+    scanf("%d", &rate);
+    printf("Number of intervals: ");
+    scanf("%d", &n);
+
+    while (n--) {
+        int drop, sent;
+        printf("Incoming packets: ");
+        scanf("%d", &p);
+
+        drop = bucket + p > size ? bucket + p - size : 0;
+        bucket += p - drop;
+        sent = bucket < rate ? bucket : rate;
+        bucket -= sent;
+
+        printf("Sent=%d Dropped=%d Remaining=%d\n",
+               sent, drop, bucket);
+    }
+
+gcc leaky1150.c
+./a.out
+    return 0;
+}
