@@ -1,0 +1,39 @@
+vim udpserver1150.c
+
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#define PORT 10252
+
+int main()
+{
+    int s, n;
+    struct sockaddr_in a, c;
+    socklen_t l = sizeof(c);
+    char b[1024];
+
+    s = socket(AF_INET, SOCK_DGRAM, 0);
+    a.sin_family = AF_INET;
+    a.sin_addr.s_addr = INADDR_ANY;
+    a.sin_port = htons(PORT);
+    bind(s, (struct sockaddr *)&a, sizeof(a));
+
+    printf("UDP server waiting...\n");
+    n = recvfrom(s, b, sizeof(b)-1, 0,
+                 (struct sockaddr *)&c, &l);
+    if (n >= 0) {
+        b[n] = '\0';
+        printf("Received: %s\n", b);
+        sendto(s, b, n, 0, (struct sockaddr *)&c, l);
+    }
+    close(s);
+
+
+gcc udpserver1150.c
+./a.out
+
+Input/output: Start the server first. Experiment 5 client sends Hello UDP; 
+server prints Received: Hello UDP and echoes it.
+    return 0;
+}
