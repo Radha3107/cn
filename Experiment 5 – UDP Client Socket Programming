@@ -1,0 +1,36 @@
+vim udpclient1150.c
+
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#define PORT 10252
+
+int main()
+{
+    int s, n;
+    struct sockaddr_in a;
+    socklen_t l = sizeof(a);
+    char msg[] = "Hello UDP", b[1024];
+
+    s = socket(AF_INET, SOCK_DGRAM, 0);
+    a.sin_family = AF_INET;
+    a.sin_port = htons(PORT);
+    inet_pton(AF_INET, "127.0.0.1", &a.sin_addr);
+
+    sendto(s, msg, strlen(msg), 0,
+           (struct sockaddr *)&a, sizeof(a));
+    n = recvfrom(s, b, sizeof(b)-1, 0,
+                 (struct sockaddr *)&a, &l);
+    if (n >= 0) {
+        b[n] = '\0';
+        printf("Server reply: %s\n", b);
+    }
+    close(s);
+    return 0;
+}
+
+gcc udpclient1150.c
+./a.out
+
+Input/output: Client sends Hello UDP; expected output: Server reply: Hello UDP.
